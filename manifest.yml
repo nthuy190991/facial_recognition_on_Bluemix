@@ -1,0 +1,8 @@
+---
+applications:
+- name: facial-recog-cf
+  memory: 128MB
+  disk_quota: 1024MB
+  random-route: true
+  buildpack: python_buildpack
+  command: python facial_recog_server_using_oxford.py
