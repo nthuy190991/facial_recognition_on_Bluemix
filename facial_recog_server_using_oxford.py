@@ -191,7 +191,7 @@ def chrome_stt(clientId): # Speech-to-Text
     t0 = time.time()
     while (global_var['stt'] == ''):
         pass
-        if (time.time()-t0>=7): # Time outs after 8 secs
+        if (time.time()-t0>=5): # Time outs after 5 secs
             global_var['stt'] = '@' # Silence
     resp = global_var['stt']
     return resp
@@ -472,7 +472,7 @@ def show_photos(clientId, imgPath, name):
         plt.imshow(img)
     plt.show()
 
-    time.sleep(5) # wait 5 secs
+    time.sleep(2.5) # wait 5 secs
     for ind in range(nb_img_max):
         plt.close("all")
 
@@ -985,7 +985,7 @@ for image_path in image_paths:
 
     print "Add image...", nom, '\t', image_path
     face_api.addPersonFace(groupId, personId, "", image_path, None)
-    time.sleep(0.5)
+    time.sleep(0.25)
 
 resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
 
@@ -997,7 +997,7 @@ print training_status
 
 
 while (training_status=='running'):
-    time.sleep(0.5)
+    time.sleep(0.25)
     res = face_api.getPersonGroupTrainingStatus(groupId)
     res = res.replace('null','None')
     res_dict = eval(res)
