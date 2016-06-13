@@ -211,7 +211,7 @@ def chrome_yes_or_no(clientId, question):
 
     if (response == ""):
 		response = chrome_stt(clientId) # Listen for an answer
-    
+
     if (response == '@'):
 		result, response = chrome_yes_or_no(clientId, u"Je ne vous entends pas, veuillez répéter")
 
@@ -940,7 +940,7 @@ suffix       = '.jpg' # image file extention
 thres        = 80     # Distance threshold for recognition
 wait_time    = 1.5    # Time needed to wait for recognition
 nb_img_max   = 2      # Number of photos needs to be taken for each user
-xls_filename = 'formation' # Excel file contains Formation information
+xls_filename = 'formation.xls' # Excel file contains Formation information
 maxNbOfCandidates = 1 # Maximum number of candidates for the identification
 
 # Natural Language Classifier
