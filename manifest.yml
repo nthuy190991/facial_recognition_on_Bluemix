@@ -1,6 +1,7 @@
 ---
 applications:
-- name: facial-recog-cf
+- name: facial-recog-using-Oxford
+  host: facial-recog-using-Oxford-vBeta
   memory: 128MB
   disk_quota: 1024MB
   random-route: true
