@@ -205,15 +205,15 @@ def chrome_yes_or_no(clientId, question):
 
     t0 = time.time()
     while ((global_var['textFromHTML']=="") and (time.time()-t0<5)):
-        pass
+        time.sleep(0.25)
     response = global_var['textFromHTML'] # Get answer from userInput during 3 seconds
     global_var['textFromHTML'] = ""
 
     if (response == ""):
-    #     response = chrome_stt(clientId) # Listen for an answer
-    #
-    # if (response == '@'):
-        result, response = chrome_yes_or_no(clientId, u"Je ne vous entends pas, veuillez répéter")
+		response = chrome_stt(clientId) # Listen for an answer
+    
+    if (response == '@'):
+		result, response = chrome_yes_or_no(clientId, u"Je ne vous entends pas, veuillez répéter")
 
     # Apply Natural Language Classifier
     classes = natural_language_classifier.classify('2374f9x68-nlc-1265', response)
