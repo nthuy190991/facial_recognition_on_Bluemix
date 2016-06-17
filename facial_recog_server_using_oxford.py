@@ -94,10 +94,6 @@ def retrieve_face_emotion_att(clientId):
         global_var['gender']  = tb_gender[ind_max]
         global_var['emo']     = tb_emo[ind_max]
 
-#        global_var['age']     = tb_age[0] # TODO: replace the first face by the biggest face (Done)
-#        global_var['gender']  = tb_gender[0]
-#        global_var['emo']     = tb_emo[0]
-
         return tb_age, tb_gender, tb_glasses, tb_emo
     else:
         return 'N/A','N/A','N/A','N/A'
