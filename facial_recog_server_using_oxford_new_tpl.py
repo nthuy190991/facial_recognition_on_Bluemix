@@ -266,7 +266,7 @@ def go_to_formation(clientId, xls_filename, name):
             
         simple_message(clientId, text2 + ' ' + text3)
         
-    	link="<a href='http://http://centre-formation-orange.mybluemix.net/'>ici</a>"
+    	link="<a href='http://centre-formation-orange.mybluemix.net/'>ici</a>"
     	simple_message(clientId, u"Cliquez " + link + u" pour accéder à la page Formation Orange pour plus d'informations")
 
         return_to_recog(clientId) # Return to recognition program immediately or 20 seconds before returning
