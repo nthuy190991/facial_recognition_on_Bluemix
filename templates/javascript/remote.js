@@ -15,6 +15,7 @@ var clientid = -1;
 // initial load
 $(document).ready(function() {
 	
+	//Test
 	$('#videoElement').css("margin-top",$('.conversation-flow-container').height()-$('#videoElement').height()+31);
 	
 	clientid = Math.floor(Math.random() * 1000000000 + 1);
