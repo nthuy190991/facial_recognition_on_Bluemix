@@ -51,8 +51,9 @@ def retrieve_face_emotion_att(clientId):
     global_var = (item for item in global_vars if item["clientId"] == str(clientId)).next()
     data = global_var['binary_data']
 
-    chrome_server2client(clientId, 'START')
     chrome_server2client(clientId, 'Veuillez patienter pendant quelques secondes...')
+    time.sleep(1)
+    chrome_server2client(clientId, 'START')
 
     # Face API
     faceResult = face_api.faceDetect(None, None, data)
@@ -258,10 +259,15 @@ def go_to_formation(clientId, xls_filename, name):
 
             ind = mail_list.index(mail) # Find user in xls file based on his/her mail
             date = xlrd.xldate_as_tuple(tb_formation[ind][tb_formation[0][:].index('Date du jour')],0)
-            global_var['text2'] = u"Bienvenue à la formation de "+str(tb_formation[ind][tb_formation[0][:].index('Prenom')])+" "+str(tb_formation[ind][tb_formation[0][:].index('Nom')] + ' !')
-            global_var['text3'] = "Vous avez un cours de " + str(tb_formation[ind][tb_formation[0][:].index('Formation')]) + ", dans la salle " + str(tb_formation[ind][tb_formation[0][:].index('Salle')]) + u", à partir du " + "{}/{}/{}".format(str(date[2]), str(date[1]),str(date[0]))
-
-        simple_message(clientId, global_var['text2'] + ' ' + global_var['text3'])
+            text2 = "Bienvenue à la formation de "+str(tb_formation[ind][tb_formation[0][:].index('Prenom')])+" "+str(tb_formation[ind][tb_formation[0][:].index('Nom')] + ' !')
+            text3 = "Vous avez un cours de " + str(tb_formation[ind][tb_formation[0][:].index('Formation')]) + ", dans la salle " + str(tb_formation[ind][tb_formation[0][:].index('Salle')]) + ", à partir du " + "{}/{}/{}".format(str(date[2]), str(date[1]),str(date[0]))
+            global_var['text2'] = replace_accents2(text2)
+            global_var['text3'] = replace_accents2(text3)
+            
+        simple_message(clientId, text2 + ' ' + text3)
+        
+    	link="<a href='http://http://centre-formation-orange.mybluemix.net/'>ici</a>"
+    	simple_message(clientId, u"Cliquez " + link + u" pour accéder à la page Formation Orange pour plus d'informations")
 
         return_to_recog(clientId) # Return to recognition program immediately or 20 seconds before returning
 
@@ -412,9 +418,11 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
 
             simple_message(clientId, 'Vous souhaitez changer les photos: ' + str_nb + ' ?')
 
-            global_var['text']  = 'Prenant photos'
+            global_var['text']  = 'Re-prenant photos'
             global_var['text2'] = 'Veuillez patienter... '
             global_var['text3'] = ''
+            
+            simple_message(clientId, global_var['text'] + ' ' + global_var['text2'])
 
         for j in range(0, len(nb)):
             global_var['text3'] = str(j) + ' ont ete prises, reste a prendre : ' + str(len(nb)-j)
