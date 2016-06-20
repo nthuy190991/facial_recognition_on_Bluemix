@@ -298,7 +298,7 @@ def reform_username(name):
         lastname     = 'leblainvaux'
         email_suffix = '@orange.com'
 
-    elif (name=='catherine' or name=='lemarquis'):
+    elif (name=='catherie'):
         firstname    = 'catherine'
         lastname     = 'lemarquis'
         email_suffix = '@orange.com'
@@ -931,6 +931,7 @@ def flask_init():
         global global_vars
         global_var  = (item for item in global_vars if item["clientId"] == str(clientId)).next()
         global_var['binary_data'] = binary_data
+#        print "receive images..."
         return "",200
 
 """
@@ -943,7 +944,7 @@ root_path    = ""
 imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
 thres        = 80     # Distance threshold for recognition
-wait_time    = 2    # Time needed to wait for recognition
+wait_time    = 2      # Time needed to wait for recognition
 nb_img_max   = 4      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
 maxNbOfCandidates = 1 # Maximum number of candidates for the identification
@@ -957,7 +958,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
 groupId     = "group_all"
 groupName   = "employeurs"
 
-face_api.deletePersonGroup(groupId)
+#face_api.deletePersonGroup(groupId)
 
 # Create PersonGroup
 result = face_api.createPersonGroup(groupId, groupName, "")
