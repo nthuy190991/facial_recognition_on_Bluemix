@@ -145,6 +145,7 @@ function displayHumanChat(text) {
 }
 
 function scrollToBottom (){
+	$('#videoElement').css("margin-top",$('.conversation-flow-container').height()-$('#videoElement').height()+31);
     $('body, html').animate({ scrollTop: $('body').height() + 'px' });
 }
 
