@@ -262,6 +262,10 @@ def go_to_formation(clientId, xls_filename, name):
             global_var['text3'] = "Vous avez un cours de " + str(tb_formation[ind][tb_formation[0][:].index('Formation')]) + ", dans la salle " + str(tb_formation[ind][tb_formation[0][:].index('Salle')]) + u", à partir du " + "{}/{}/{}".format(str(date[2]), str(date[1]),str(date[0]))
 
         simple_message(clientId, global_var['text2'] + ' ' + global_var['text3'])
+        time.sleep(1)
+
+        link='<a href="http://www.google.com">ici</a>'
+        simple_message(clientId, u"SILENT Cliquez " + link + u" pour accéder à la page Formation pour plus d'information")
 
         return_to_recog(clientId) # Return to recognition program immediately or 20 seconds before returning
 
@@ -744,6 +748,11 @@ def quit_program(clientId):
 """
 Definition of used yes-no questions in program
 """
+
+def ask_access_page_formation(clientId):
+    resp = yes_or_no(clientId, u"Voulez-vous accéder à la page Formation Orange ?")
+    return resp
+    
 def ask_go_to_formation(clientId):
     resp = yes_or_no(clientId, u"Voulez-vous accéder votre page de Formation ?")
     return resp
@@ -957,72 +966,72 @@ natural_language_classifier = NaturalLanguageClassifierV1(
 groupId     = "group_all"
 groupName   = "employeurs"
 
-face_api.deletePersonGroup(groupId)
-
-# Create PersonGroup
-result = face_api.createPersonGroup(groupId, groupName, "")
-print result
-#result = eval(result)
-
-# if result["error"]["code"] == "PersonGroupExists":
-#     #TODO: change to get personGroup info than delete it
-#     #face_api.deletePersonGroup(groupId)
-#     print 'a'
-
-list_nom = []
-list_personId = []
-nbr = 0
-
-image_paths = [os.path.join(imgPath, f) for f in os.listdir(imgPath)]
-
-for image_path in image_paths:
-    nom = os.path.split(image_path)[1].split(".")[0]
-    if nom not in list_nom:
-        # Create a Person in a PersonGroup
-        personName = nom
-        personId   = face_api.createPerson(groupId, personName, "")
-
-        list_nom.append(nom)
-        list_personId.append(personId)
-        nbr += 1
-    else:
-        personId = list_personId[nbr-1]
-
-    print "Add image...", nom, '\t', image_path
-    face_api.addPersonFace(groupId, personId, "", image_path, None)
-    time.sleep(0.25)
-
-resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
-
-res      = face_api.getPersonGroupTrainingStatus(groupId)
-res      = res.replace('null','None')
-res_dict = eval(res)
-training_status = res_dict['status']
-print training_status
-
-while (training_status=='running'):
-    time.sleep(0.25)
-    res = face_api.getPersonGroupTrainingStatus(groupId)
-    res = res.replace('null','None')
-    res_dict = eval(res)
-    training_status = res_dict['status']
-    print training_status
-
-if (training_status=='succeeded'):
-    global_vars = []
-    origine_time = time.time()
-
-    flask_init()
-    port = int(os.getenv("PORT", 9099))
-    app.run(host = '0.0.0.0', port = port, threaded = True)
-
+#face_api.deletePersonGroup(groupId)
 #
-# global_vars = []
-# origine_time = time.time()
+## Create PersonGroup
+#result = face_api.createPersonGroup(groupId, groupName, "")
+#print result
+##result = eval(result)
 #
-# flask_init()
-# port = int(os.getenv("PORT", 9099))
-# app.run(host = '0.0.0.0', port = port, threaded = True)
+## if result["error"]["code"] == "PersonGroupExists":
+##     #TODO: change to get personGroup info than delete it
+##     #face_api.deletePersonGroup(groupId)
+##     print 'a'
+#
+#list_nom = []
+#list_personId = []
+#nbr = 0
+#
+#image_paths = [os.path.join(imgPath, f) for f in os.listdir(imgPath)]
+#
+#for image_path in image_paths:
+#    nom = os.path.split(image_path)[1].split(".")[0]
+#    if nom not in list_nom:
+#        # Create a Person in a PersonGroup
+#        personName = nom
+#        personId   = face_api.createPerson(groupId, personName, "")
+#
+#        list_nom.append(nom)
+#        list_personId.append(personId)
+#        nbr += 1
+#    else:
+#        personId = list_personId[nbr-1]
+#
+#    print "Add image...", nom, '\t', image_path
+#    face_api.addPersonFace(groupId, personId, "", image_path, None)
+#    time.sleep(0.25)
+#
+#resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
+#
+#res      = face_api.getPersonGroupTrainingStatus(groupId)
+#res      = res.replace('null','None')
+#res_dict = eval(res)
+#training_status = res_dict['status']
+#print training_status
+#
+#while (training_status=='running'):
+#    time.sleep(0.25)
+#    res = face_api.getPersonGroupTrainingStatus(groupId)
+#    res = res.replace('null','None')
+#    res_dict = eval(res)
+#    training_status = res_dict['status']
+#    print training_status
+#
+#if (training_status=='succeeded'):
+#    global_vars = []
+#    origine_time = time.time()
+#
+#    flask_init()
+#    port = int(os.getenv("PORT", 9099))
+#    app.run(host = '0.0.0.0', port = port, threaded = True)
+
+
+global_vars = []
+origine_time = time.time()
+
+flask_init()
+port = int(os.getenv("PORT", 9099))
+app.run(host = '0.0.0.0', port = port, threaded = True)
 
 
 # END OF PROGRAM
