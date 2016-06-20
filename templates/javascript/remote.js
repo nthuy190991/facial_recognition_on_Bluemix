@@ -112,8 +112,8 @@ function waitForServerInput() {
 				$dialogsLoading.hide();
 			}
 			else if (data.indexOf("SILENT") === 0) {
-				var txt = data.substring(7);
-				displayBotChat(txt, 0);
+				var txt2 = data.substring(7);
+				displayBotChat(txt2, 0);
 				$dialogsLoading.hide();
 			}
 			else {
