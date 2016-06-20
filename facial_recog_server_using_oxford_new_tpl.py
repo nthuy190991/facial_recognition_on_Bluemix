@@ -30,6 +30,13 @@ def replace_accents(text):
     text2 = str_replace_chars(text, chars_origine, chars_replace)
     return text2
 
+def replace_accents2(text):
+    chars_origine = ['Ê','à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é', 'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ò', 'ó', 'ô', 'õ', 'ö', 'ù', 'ú', 'û', 'ü']
+    chars_replace = ['E','a', 'a', 'a', 'a', 'a', 'a', 'ae', 'c', 'e', 'e', 'e', 'e', 'i', 'i', 'i', 'i', 'o', 'o', 'o', 'o', 'o', 'u', 'u', 'u', 'u']
+    text2 = str_replace_chars(text, chars_origine, chars_replace)
+    return text2
+
+
 """
 Replace characters in a string
 """
@@ -51,8 +58,9 @@ def retrieve_face_emotion_att(clientId):
     global_var = (item for item in global_vars if item["clientId"] == str(clientId)).next()
     data = global_var['binary_data']
 
-    chrome_server2client(clientId, 'START')
     chrome_server2client(clientId, 'Veuillez patienter pendant quelques secondes...')
+    time.sleep(1)
+    chrome_server2client(clientId, 'START')
 
     # Face API
     faceResult = face_api.faceDetect(None, None, data)
@@ -258,13 +266,15 @@ def go_to_formation(clientId, xls_filename, name):
 
             ind = mail_list.index(mail) # Find user in xls file based on his/her mail
             date = xlrd.xldate_as_tuple(tb_formation[ind][tb_formation[0][:].index('Date du jour')],0)
-            global_var['text2'] = u"Bienvenue à la formation de "+str(tb_formation[ind][tb_formation[0][:].index('Prenom')])+" "+str(tb_formation[ind][tb_formation[0][:].index('Nom')] + ' !')
-            global_var['text3'] = "Vous avez un cours de " + str(tb_formation[ind][tb_formation[0][:].index('Formation')]) + ", dans la salle " + str(tb_formation[ind][tb_formation[0][:].index('Salle')]) + u", à partir du " + "{}/{}/{}".format(str(date[2]), str(date[1]),str(date[0]))
-
-        simple_message(clientId, global_var['text2'] + ' ' + global_var['text3'])
+            text2 = "Bienvenue à la formation de "+str(tb_formation[ind][tb_formation[0][:].index('Prenom')])+" "+str(tb_formation[ind][tb_formation[0][:].index('Nom')] + ' !')
+            text3 = "Vous avez un cours de " + str(tb_formation[ind][tb_formation[0][:].index('Formation')]) + ", dans la salle " + str(tb_formation[ind][tb_formation[0][:].index('Salle')]) + ", à partir du " + "{}/{}/{}".format(str(date[2]), str(date[1]),str(date[0]))
+            global_var['text2'] = replace_accents2(text2)
+            global_var['text3'] = replace_accents2(text3)
+            
+        simple_message(clientId, text2 + ' ' + text3)
         time.sleep(1)
 
-        link='<a href="http://www.google.com">ici</a>'
+        link='<a href="http://centre-formation-orange.mybluemix.net">ici</a>'
         simple_message(clientId, u"SILENT Cliquez " + link + u" pour accéder à la page Formation pour plus d'information")
 
         return_to_recog(clientId) # Return to recognition program immediately or 20 seconds before returning
@@ -302,7 +312,7 @@ def reform_username(name):
         lastname     = 'leblainvaux'
         email_suffix = '@orange.com'
 
-    elif (name=='catherine' or name=='lemarquis'):
+    elif (name=='catherie'):
         firstname    = 'catherine'
         lastname     = 'lemarquis'
         email_suffix = '@orange.com'
@@ -416,9 +426,11 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
 
             simple_message(clientId, 'Vous souhaitez changer les photos: ' + str_nb + ' ?')
 
-            global_var['text']  = 'Prenant photos'
+            global_var['text']  = 'Re-prenant photos'
             global_var['text2'] = 'Veuillez patienter... '
             global_var['text3'] = ''
+            
+            simple_message(clientId, global_var['text'] + ' ' + global_var['text2'])
 
         for j in range(0, len(nb)):
             global_var['text3'] = str(j) + ' ont ete prises, reste a prendre : ' + str(len(nb)-j)
@@ -940,6 +952,7 @@ def flask_init():
         global global_vars
         global_var  = (item for item in global_vars if item["clientId"] == str(clientId)).next()
         global_var['binary_data'] = binary_data
+#        print "receive images..."
         return "",200
 
 """
@@ -952,7 +965,7 @@ root_path    = ""
 imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
 thres        = 80     # Distance threshold for recognition
-wait_time    = 2    # Time needed to wait for recognition
+wait_time    = 2      # Time needed to wait for recognition
 nb_img_max   = 4      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
 maxNbOfCandidates = 1 # Maximum number of candidates for the identification
@@ -967,6 +980,7 @@ groupId     = "group_all"
 groupName   = "employeurs"
 
 #face_api.deletePersonGroup(groupId)
+
 #
 ## Create PersonGroup
 #result = face_api.createPersonGroup(groupId, groupName, "")

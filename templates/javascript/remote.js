@@ -2,9 +2,6 @@
 /*globals webkitSpeechRecognition */
 'use strict';
 
-var audioQueue = [];
-var audio = $('.audio').get(0);
-
 var isChrome = !!window.chrome && !!window.chrome.webstore;
 
 var $dialogsLoading = $('.dialogs-loading');
@@ -17,14 +14,15 @@ var clientid = -1;
 
 // initial load
 $(document).ready(function() {
-
+	
+	//Test
+	$('#videoElement').css("margin-top",$('.conversation-flow-container').height()-$('#videoElement').height()+31);
+	
 	clientid = Math.floor(Math.random() * 1000000000 + 1);
 	//var randnum = (Math.floor((Math.random() * 100000))).toString();//TODO: new
 	//var clientid = "0".repeat(5-randnum.length) + randnum;
 
 	$.post('/chat?text=START&id='+clientid);//TODO: new
-
-	$('.audio').on('ended', function() {checkAudioQueue();});
 
 	$('.listen-btn').click(listenAndWrite);
 
@@ -100,11 +98,11 @@ function waitForServerInput() {
 	$.post('/wait?id='+clientid).done(function(data) {
 		waitForServerInput();
 		if (data !== "RECONNECT" && data !== ""){
-			/*displayBotChat(data);
+			/*displayBotChat(data, 1);
 			$dialogsLoading.hide();*/
 			if (data.indexOf("THINK") === 0) {
 				var txt = data.substring(6);
-				displayBotChat(txt);
+				displayBotChat(txt, 1);
 				$dialogsLoading.show();
 			}
 			else if (data.indexOf("START") === 0) {
@@ -113,20 +111,26 @@ function waitForServerInput() {
 			else if (data.indexOf("DONE") === 0) {
 				$dialogsLoading.hide();
 			}
+			else if (data.indexOf("SILENT") === 0) {
+				var txt2 = data.substring(7);
+				displayBotChat(txt2, 0);
+				$dialogsLoading.hide();
+			}
 			else {
-				displayBotChat(data);
+				displayBotChat(data, 1);
 				$dialogsLoading.hide();
 			}
 		}
 	});
 }
 
-function displayBotChat(text) {
+function displayBotChat(text, flag) {
 
 	$('<div class="bubble-watson"/>').html(text).appendTo($conversation);
 	scrollToBottom();
-	startAudio(text);
-
+	if (flag === 1){
+		startAudio(text);
+	}
 }
 
 function displayHumanChat(text) {
@@ -141,6 +145,7 @@ function displayHumanChat(text) {
 }
 
 function scrollToBottom (){
+	$('#videoElement').css("margin-top",$('.conversation-flow-container').height()-$('#videoElement').height()+31);
     $('body, html').animate({ scrollTop: $('body').height() + 'px' });
 }
 
