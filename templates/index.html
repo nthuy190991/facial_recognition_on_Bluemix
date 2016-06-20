@@ -26,12 +26,8 @@
 		</div>
 		<div class="row conversation-div">
 			<div class="container">
-				<div class="col-lg-12 col-md-12 col-xs-12">
+				<div class="col-lg-8 col-md-8 col-xs-4" id="conversation-flow-container">
 					<div class="conversation-flow-container clearfix">
-						<div class="video">
-							<video id="videoElement" autoplay style="width:40%"></video>
-							<canvas id="canvasElement" style="display:none;"></canvas>
-						</div>
 						<div class="col-lg-12 col-md-12 col-xs-12">
 							<div class="conversation-well conversation-container clearfix"></div>
 						</div>
@@ -43,6 +39,10 @@
 						<div class="col-lg-2 col-md-2 col-xs-3 text-right no-padding-left no-padding-right"><button id="send-btn" class="input-btn btn btn-block">Envoyer</button></div>
 						<div class="col-lg-2 col-md-2 col-xs-3 text-right no-padding-left"><button id="listen-btn" class="listen-btn btn btn-block">Ecouter</button></div>
 					</div>
+				</div>
+				<div class="video col-lg-4 col-md-4 col-md-12">
+					<video id="videoElement" autoplay style="width:100%;margin-top: 20px;"></video>
+					<canvas id="canvasElement" style="display:none;"></canvas>
 				</div>
 			</div>
 		</div>

@@ -2,9 +2,6 @@
 /*globals webkitSpeechRecognition */
 'use strict';
 
-var audioQueue = [];
-var audio = $('.audio').get(0);
-
 var isChrome = !!window.chrome && !!window.chrome.webstore;
 
 var $dialogsLoading = $('.dialogs-loading');
@@ -17,14 +14,14 @@ var clientid = -1;
 
 // initial load
 $(document).ready(function() {
-
+	
+	$('#videoElement').css("margin-top",$('.conversation-flow-container').height()-$('#videoElement').height()+31);
+	
 	clientid = Math.floor(Math.random() * 1000000000 + 1);
 	//var randnum = (Math.floor((Math.random() * 100000))).toString();//TODO: new
 	//var clientid = "0".repeat(5-randnum.length) + randnum;
 
 	$.post('/chat?text=START&id='+clientid);//TODO: new
-
-	$('.audio').on('ended', function() {checkAudioQueue();});
 
 	$('.listen-btn').click(listenAndWrite);
 
