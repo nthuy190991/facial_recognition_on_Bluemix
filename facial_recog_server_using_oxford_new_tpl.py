@@ -603,11 +603,11 @@ def run_program(clientId):
                 if ((elapsed_time > wait_time) and global_var['flag_enable_recog']): # Identify after each 3 seconds
                     faceDetectResult    = face_api.faceDetect(None, None, data)
                     # print faceDetectResult
-                    if len(faceDetectResult)>=1:
+                    if (len(faceDetectResult)>=1):
                         new_faceId          = faceDetectResult[0]['faceId']
                         resultIdentify      = face_api.faceIdentify(groupId, [new_faceId], maxNbOfCandidates)
 
-                        if len(resultIdentify[0]['candidates'])>=1: # If the number of times recognized is big enough
+                        if (len(resultIdentify[0]['candidates'])>=1): # If the number of times recognized is big enough
                             global_var['flag_recog']  = 1 # Known Person
                             global_var['flag_ask']    = 0
                             recognizedPersonId  = resultIdentify[0]['candidates'][0]['personId']
@@ -965,7 +965,6 @@ def flask_init():
 root_path    = ""
 imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
-thres        = 80     # Distance threshold for recognition
 wait_time    = 2      # Time needed to wait for recognition
 nb_img_max   = 4      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
@@ -980,6 +979,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
 groupId     = "group_all"
 groupName   = "employeurs"
 
+# Delete PersonGroup that existed
 face_api.deletePersonGroup(groupId)
 
 
