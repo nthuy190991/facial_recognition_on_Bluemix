@@ -14,13 +14,57 @@ import xlrd
 from threading import Thread
 from flask import Flask, request, render_template, send_from_directory
 import operator
-from binascii import a2b_base64
+from binascii import a2b_base64, b2a_base64
 from watson_developer_cloud import NaturalLanguageClassifierV1
 import face_api
 import emotion_api
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from datetime import datetime
+
+_username = 'nthuy190991'
+_password = 'Thanhhuy123'
+
+def put_image_to_github(image_path, data):
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    json = {
+        "message": "bluemix",
+        "content": b2a_base64(data)
+    }
+    url = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/' + image_path
+
+    response = requests.put(url, headers=headers, json=json, auth=(_username, _password))
+    result = response.json() if response.content else None
+    return result
+
+def get_image_from_github(image_path):
+    url = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/' + image_path
+    response = requests.get(url, auth=(_username, _password))
+
+    result = response.json() if response.content else None
+    data_read   = result['content']
+    binary_data = a2b_base64(data_read)
+    return binary_data
+
+def delete_image_on_github(image_path):
+    url = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/' + image_path
+    response = requests.get(url, auth=(username, password))
+    result   = response.json() if response.content else None
+    sha      = result['sha']
+
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    json = {
+        "message": "bluemix",
+        "sha": sha
+    }
+    response = requests.delete(url, headers=headers, json=json, auth=(username, password))
+    result   = response.json() if response.content else None
+    return result
 
 """
 Replace French accents in texts
@@ -253,7 +297,8 @@ def create_group_add_person(groupId, groupName):
                 personId = list_personId[nbr-1]
 
             # Add image
-            face_api.addPersonFace(groupId, personId, None, image_path, None)
+            image_data = get_image_from_github(image_path)
+            face_api.addPersonFace(groupId, personId, None, None, image_data)
             print "Add image...", nom, '\t', image_path
             time.sleep(0.25)
 
@@ -279,6 +324,7 @@ def train_person_group(groupId):
         print training_status
 
     return training_status
+
 
 
 """
@@ -487,7 +533,9 @@ def take_photos(clientId, step_time, flag_show_photos):
         b = yes_or_no(clientId, u"Les fichiers avec le nom " + str(name) + u" existent déjà, écraser ces fichiers ?", 3)
         if (b==1):
             for image_del_path in image_to_paths:
-                os.remove(image_del_path)
+                # os.remove(image_del_path)
+                delete_image_on_github(image_del_path)
+                
         elif (b==0):
             name = ask_name(clientId, 1)
             image_to_paths = [imgPath + str(name)+"."+str(i)+suffix for i in range(nb_img_max)]
@@ -500,9 +548,10 @@ def take_photos(clientId, step_time, flag_show_photos):
     nb_img = 0
     while (nb_img < nb_img_max):
         image_path = image_to_paths[nb_img]
-        with open(image_path, 'wb') as f:
-            f.write(global_var['binary_data'])
-            f.close()
+        put_image_to_github(image_path, global_var['binary_data'])
+        # with open(image_path, 'wb') as f:
+        #     f.write(global_var['binary_data'])
+        #     f.close()
 
         print "Enregistrer photo " + image_path + ", nb de photos prises : " + str(nb_img+1)
         global_var['text3'] = str(nb_img+1) + ' ont ete prises, reste a prendre : ' + str(nb_img_max-nb_img-1)
@@ -572,10 +621,13 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
             print "Reprendre photo ", nb[j]
             #TODO: add a facedetect here to cut the face from image
             image_path = image_to_paths[int(nb[j])-1]
-            os.remove(image_path) # Remove old image
-            with open(image_path, 'wb') as f:
-                f.write(global_var['binary_data'])
-                f.close()
+            # os.remove(image_path) # Remove old image
+            delete_image_on_github(image_path)
+
+            # with open(image_path, 'wb') as f:
+            #     f.write(global_var['binary_data'])
+            #     f.close()
+            put_image_to_github(image_path, global_var['binary_data'])
 
             print "Enregistrer photo " + image_path + ", nb de photos prises : " + nb[j]
 
@@ -595,7 +647,8 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
     print "Adding faces to person group..."
     image_to_paths = [root_path+imgPath+str(name)+"."+str(j)+suffix for j in range(nb_img_max)]
     for image_path in image_to_paths:
-        face_api.addPersonFace(groupId, personId, None, image_path, None)
+        image_data = get_image_from_github(image_path)
+        face_api.addPersonFace(groupId, personId, None, None, image_data)
 
     # Retrain Person Group
     resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
@@ -609,19 +662,19 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
 Display photos that have just been taken, close them if after 5 seconds or press any key
 """
 def show_photos(clientId, imgPath, name):
+    print 'todo'
+    # image_to_paths = [root_path + imgPath + str(name) + "." + str(j) + suffix for j in range(nb_img_max)]
 
-    image_to_paths = [root_path + imgPath + str(name) + "." + str(j) + suffix for j in range(nb_img_max)]
+    # for img_path in image_to_paths:
+    #     print 'display', img_path
+    #     plt.figure()
+    #     img = mpimg.imread(img_path)
+    #     plt.imshow(img)
+    # plt.show()
 
-    for img_path in image_to_paths:
-        print 'display', img_path
-        plt.figure()
-        img = mpimg.imread(img_path)
-        plt.imshow(img)
-    plt.show()
-
-    time.sleep(2.5) # wait 5 secs
-    for ind in range(nb_img_max):
-        plt.close("all")
+    # time.sleep(2.5) # wait 5 secs
+    # for ind in range(nb_img_max):
+    #     plt.close("all")
 
 
 """
@@ -1098,8 +1151,8 @@ def flask_init():
 """
 # Parameters
 root_path    = ""
-imgPath      = "face_database_for_oxford/" # path to database of faces
-suffix       = '.jpg' # image file extention
+imgPath      = "face_database_bin/" # path to database of faces
+suffix       = '.bin' # image file extention
 wait_time    = 2      # Time needed to wait for recognition
 nb_img_max   = 2      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
@@ -1129,62 +1182,5 @@ if (result=='succeeded'):
     flask_init()
     port = int(os.getenv("PORT", 9099))
     app.run(host = '0.0.0.0', port = port, threaded = True)
-
-
-## Delete PersonGroup that existed
-#face_api.deletePersonGroup(groupId)
-#
-#
-## Create PersonGroup
-#result = face_api.createPersonGroup(groupId, groupName, "")
-#print result
-#
-#list_nom = []
-#list_personId = []
-#nbr = 0
-#
-#image_paths = [os.path.join(imgPath, f) for f in os.listdir(imgPath)]
-#
-#for image_path in image_paths:
-#    nom = os.path.split(image_path)[1].split(".")[0]
-#    if nom not in list_nom:
-#        # Create a Person in a PersonGroup
-#        personName = nom
-#        personId   = face_api.createPerson(groupId, personName, "")
-#
-#        list_nom.append(nom)
-#        list_personId.append(personId)
-#        nbr += 1
-#    else:
-#        personId = list_personId[nbr-1]
-#
-#    print "Add image...", nom, '\t', image_path
-#    face_api.addPersonFace(groupId, personId, "", image_path, None)
-#    time.sleep(0.25)
-#
-#resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
-#
-#res      = face_api.getPersonGroupTrainingStatus(groupId)
-#res      = res.replace('null','None')
-#res_dict = eval(res)
-#training_status = res_dict['status']
-#print training_status
-#
-#while (training_status=='running'):
-#    time.sleep(0.25)
-#    res = face_api.getPersonGroupTrainingStatus(groupId)
-#    res = res.replace('null','None')
-#    res_dict = eval(res)
-#    training_status = res_dict['status']
-#    print training_status
-#
-#if (training_status=='succeeded'):
-#    global_vars = []
-#    origine_time = time.time()
-#
-#    flask_init()
-#    port = int(os.getenv("PORT", 9099))
-#    app.run(host = '0.0.0.0', port = port, threaded = True)
-
 
 # END OF PROGRAM
