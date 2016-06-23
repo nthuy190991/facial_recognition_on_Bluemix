@@ -189,29 +189,30 @@ def create_group_add_person(groupId, groupName):
             res_train_status      = res_train_status.replace('null','None')
             res_train_status_dict = eval(res_train_status)
 
-            createdDateTime = res_train_status_dict['createdDateTime']
-            year, month, day, hour, mi, sec = convert_datetime(createdDateTime)
+            if 'error' not in res_train_status_dict:
+                createdDateTime = res_train_status_dict['createdDateTime']
+                year, month, day, hour, mi, sec = convert_datetime(createdDateTime)
 
-            structTime = time.localtime()
-            dt_now = datetime(*structTime[:6])
+                structTime = time.localtime()
+                dt_now = datetime(*structTime[:6])
 
 
-            # Compare if the PersonGroup has expired or not (24 hours)
-            if (dt_now.year==year):
-                if (dt_now.month==month):
-                    if (dt_now.day==day):
-                        del_person_group = False
-                    elif (dt_now.day-1==day):
-                        if (dt_now.hour<hour):
+                # Compare if the PersonGroup has expired or not (24 hours)
+                if (dt_now.year==year):
+                    if (dt_now.month==month):
+                        if (dt_now.day==day):
                             del_person_group = False
+                        elif (dt_now.day-1==day):
+                            if (dt_now.hour<hour):
+                                del_person_group = False
+                            else:
+                                del_person_group = True
                         else:
                             del_person_group = True
                     else:
                         del_person_group = True
-                else:
-                    del_person_group = True
-
-
+            else:
+                del_person_group = True
 
             if (del_person_group):
                 print 'PersonGroup exists, deleting...'

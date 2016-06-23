@@ -21,6 +21,7 @@ import emotion_api
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from datetime import datetime
+import requests
 
 _username = 'nthuy190991'
 _password = 'Thanhhuy123'
@@ -232,30 +233,32 @@ def create_group_add_person(groupId, groupName):
             res_train_status      = face_api.getPersonGroupTrainingStatus(groupId)
             res_train_status      = res_train_status.replace('null','None')
             res_train_status_dict = eval(res_train_status)
+            print res_train_status
 
-            createdDateTime = res_train_status_dict['createdDateTime']
-            year, month, day, hour, mi, sec = convert_datetime(createdDateTime)
+            if 'error' not in res_train_status_dict:
+                createdDateTime = res_train_status_dict['createdDateTime']
+                year, month, day, hour, mi, sec = convert_datetime(createdDateTime)
 
-            structTime = time.localtime()
-            dt_now = datetime(*structTime[:6])
+                structTime = time.localtime()
+                dt_now = datetime(*structTime[:6])
 
 
-            # Compare if the PersonGroup has expired or not (24 hours)
-            if (dt_now.year==year):
-                if (dt_now.month==month):
-                    if (dt_now.day==day):
-                        del_person_group = False
-                    elif (dt_now.day-1==day):
-                        if (dt_now.hour<hour):
+                # Compare if the PersonGroup has expired or not (24 hours)
+                if (dt_now.year==year):
+                    if (dt_now.month==month):
+                        if (dt_now.day==day):
                             del_person_group = False
+                        elif (dt_now.day-1==day):
+                            if (dt_now.hour<hour):
+                                del_person_group = False
+                            else:
+                                del_person_group = True
                         else:
                             del_person_group = True
                     else:
                         del_person_group = True
-                else:
-                    del_person_group = True
-
-
+            else:
+                del_person_group = True
 
             if (del_person_group):
                 print 'PersonGroup exists, deleting...'
@@ -535,7 +538,7 @@ def take_photos(clientId, step_time, flag_show_photos):
             for image_del_path in image_to_paths:
                 # os.remove(image_del_path)
                 delete_image_on_github(image_del_path)
-                
+
         elif (b==0):
             name = ask_name(clientId, 1)
             image_to_paths = [imgPath + str(name)+"."+str(i)+suffix for i in range(nb_img_max)]
@@ -662,19 +665,26 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
 Display photos that have just been taken, close them if after 5 seconds or press any key
 """
 def show_photos(clientId, imgPath, name):
-    print 'todo'
-    # image_to_paths = [root_path + imgPath + str(name) + "." + str(j) + suffix for j in range(nb_img_max)]
+    image_to_paths = [root_path + imgPath + str(name) + "." + str(j) + suffix for j in range(nb_img_max)]
 
-    # for img_path in image_to_paths:
-    #     print 'display', img_path
-    #     plt.figure()
-    #     img = mpimg.imread(img_path)
-    #     plt.imshow(img)
-    # plt.show()
+    for img_path in image_to_paths:
+        image_data = get_image_from_github(img_path)
+        data_read  = b2a_base64(image_data)
 
-    # time.sleep(2.5) # wait 5 secs
-    # for ind in range(nb_img_max):
-    #     plt.close("all")
+        fh = open(img_path, "wb")
+        fh.write(data_read.decode('base64'))
+        fh.close()
+
+    for img_path in image_to_paths:
+        print 'display', img_path
+        plt.figure()
+        img = mpimg.imread(img_path)
+        plt.imshow(img)
+    plt.show()
+
+    time.sleep(2.5) # wait 5 secs
+    for ind in range(nb_img_max):
+        plt.close("all")
 
 
 """
@@ -1152,7 +1162,7 @@ def flask_init():
 # Parameters
 root_path    = ""
 imgPath      = "face_database_bin/" # path to database of faces
-suffix       = '.bin' # image file extention
+suffix       = '.jpg' # image file extention
 wait_time    = 2      # Time needed to wait for recognition
 nb_img_max   = 2      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
@@ -1164,7 +1174,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange"
+groupId     = "group_orange_nouveau"
 groupName   = "employeurs"
 
 list_nom = []
