@@ -1161,7 +1161,7 @@ def flask_init():
 """
 # Parameters
 root_path    = ""
-imgPath      = "face_database_bin/" # path to database of faces
+imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
 wait_time    = 2      # Time needed to wait for recognition
 nb_img_max   = 2      # Number of photos needs to be taken for each user
@@ -1174,7 +1174,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange_nouveau"
+groupId     = "group_orange_neuf"
 groupName   = "employeurs"
 
 list_nom = []
