@@ -23,8 +23,9 @@ import matplotlib.image as mpimg
 from datetime import datetime
 import requests
 
-_username = 'nthuy190991'
-_password = 'Thanhhuy123'
+_username   = 'nthuy190991'
+_password   = 'Thanhhuy123'
+_url_github = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/'
 
 def put_image_to_github(image_path, data):
 
@@ -35,14 +36,14 @@ def put_image_to_github(image_path, data):
         "message": "bluemix",
         "content": b2a_base64(data)
     }
-    url = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/' + image_path
+    url = _url_github + image_path
 
     response = requests.put(url, headers=headers, json=json, auth=(_username, _password))
-    result = response.json() if response.content else None
+    result   = response.json() if response.content else None
     return result
 
 def get_image_from_github(image_path):
-    url = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/' + image_path
+    url = _url_github + image_path
     response = requests.get(url, auth=(_username, _password))
 
     result = response.json() if response.content else None
@@ -51,8 +52,8 @@ def get_image_from_github(image_path):
     return binary_data
 
 def delete_image_on_github(image_path):
-    url = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/' + image_path
-    response = requests.get(url, auth=(username, password))
+    url = _url_github + image_path
+    response = requests.get(url, auth=(_username, _password))
     result   = response.json() if response.content else None
     sha      = result['sha']
 
@@ -63,7 +64,7 @@ def delete_image_on_github(image_path):
         "message": "bluemix",
         "sha": sha
     }
-    response = requests.delete(url, headers=headers, json=json, auth=(username, password))
+    response = requests.delete(url, headers=headers, json=json, auth=(_username, _password))
     result   = response.json() if response.content else None
     return result
 
@@ -74,7 +75,7 @@ def replace_accents(text):
     chars_origine = ['Ê','à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é',
                      'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ò', 'ó', 'ô', 'õ', 'ö',
                      'ù', 'ú', 'û', 'ü']
-    chars_replace  = ['\xC3','\xE0', '\xE1', '\xE2', '\xE3', '\xE4', '\xE5',
+    chars_replace = ['\xC3','\xE0', '\xE1', '\xE2', '\xE3', '\xE4', '\xE5',
                       '\xE6', '\xE7', '\xE8', '\xE9', '\xEA', '\xEB', '\xEC',
                       '\xED', '\xEE', '\xEF', '\xF2', '\xF3', '\xF4', '\xF5',
                       '\xF6', '\xF9', '\xFA', '\xFB', '\xFC']
@@ -225,7 +226,9 @@ def create_group_add_person(groupId, groupName):
     # Create PersonGroup
     result = face_api.createPersonGroup(groupId, groupName, "")
     flag_reuse_person_group = False
-    if (result!=''):
+
+    # if (result!=''):
+    if ('error' in result):
         result = eval(result)
 
         if (result["error"]["code"] == "PersonGroupExists"):
@@ -280,6 +283,8 @@ def create_group_add_person(groupId, groupName):
         elif (result["error"]["code"] == "RateLimitExceeded"):
             print 'RateLimitExceeded, please retry after 30 seconds'
             sys.exit()
+
+
 
     if not flag_reuse_person_group:
         # Create person and add person image
@@ -547,6 +552,8 @@ def take_photos(clientId, step_time, flag_show_photos):
     global_var['text2'] = 'Veuillez patienter... '
 
     simple_message(clientId, global_var['text'] + ', ' + global_var['text2'])
+    time.sleep(0.5)
+    chrome_server2client(clientId, 'START')
 
     nb_img = 0
     while (nb_img < nb_img_max):
@@ -560,6 +567,8 @@ def take_photos(clientId, step_time, flag_show_photos):
         global_var['text3'] = str(nb_img+1) + ' ont ete prises, reste a prendre : ' + str(nb_img_max-nb_img-1)
         nb_img += 1
         time.sleep(step_time)
+
+    chrome_server2client(clientId, 'DONE')
 
     # Display photos that has just been taken
     if flag_show_photos:
@@ -837,6 +846,7 @@ def run_program(clientId):
                             if (not global_var['flag_reidentify']):
                                 global_var['flag_ask'] = 1
                                 simple_message(clientId, u'Désolé, je ne vous reconnaît pas')
+                                time.sleep(0.5)
                     else:
                         global_var['flag_recog'] = -1
                         global_var['text']  = 'Aucune personne'
@@ -1164,7 +1174,7 @@ root_path    = ""
 imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
 wait_time    = 2      # Time needed to wait for recognition
-nb_img_max   = 2      # Number of photos needs to be taken for each user
+nb_img_max   = 3      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
 maxNbOfCandidates = 1 # Maximum number of candidates for the identification
 
