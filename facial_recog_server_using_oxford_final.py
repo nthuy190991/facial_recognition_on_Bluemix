@@ -552,7 +552,7 @@ def take_photos(clientId, step_time, flag_show_photos):
     global_var['text2'] = 'Veuillez patienter... '
 
     simple_message(clientId, global_var['text'] + ', ' + global_var['text2'])
-    time.sleep(0.25)
+    time.sleep(0.5)
     chrome_server2client(clientId, 'START')
 
     nb_img = 0
@@ -570,17 +570,33 @@ def take_photos(clientId, step_time, flag_show_photos):
 
     chrome_server2client(clientId, 'DONE')
 
-    # Display photos that has just been taken
-    if flag_show_photos:
-        thread_show_photos = Thread(target = show_photos, args = (clientId, imgPath, name), name = 'thread_show_photos_'+clientId)
-        thread_show_photos.start()
+#    # Display photos that has just been taken
+#    if flag_show_photos:
+#        thread_show_photos = Thread(target = show_photos, args = (clientId, imgPath, name), name = 'thread_show_photos_'+clientId)
+#        thread_show_photos.start()
+#
+#    time.sleep(0.5)
+#
+#    # Allow to retake photos and validate after finish taking
+#    thread_retake_validate_photos = Thread(target = retake_validate_photos, args = (clientId, personId, step_time, flag_show_photos, imgPath, name), name = 'thread_retake_validate_photos_'+clientId)
+#    thread_retake_validate_photos.start()
+	
+	# TODO: new
+	time.sleep(1)
+	
+	print "Adding faces to person group..."
+    image_to_paths = [root_path+imgPath+str(name)+"."+str(j)+suffix for j in range(nb_img_max)]
+    for image_path in image_to_paths:
+        image_data = get_image_from_github(image_path)
+        face_api.addPersonFace(groupId, personId, None, None, image_data)
 
-    time.sleep(0.5)
+    # Retrain Person Group
+    resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
+    print "Re-train Person Group: ", resultTrainPersonGroup
 
-    # Allow to retake photos and validate after finish taking
-    thread_retake_validate_photos = Thread(target = retake_validate_photos, args = (clientId, personId, step_time, flag_show_photos, imgPath, name), name = 'thread_retake_validate_photos_'+clientId)
-    thread_retake_validate_photos.start()
-
+    global_var['flag_enable_recog'] = 1  # Re-enable recognition
+    global_var['flag_ask'] = 1 # Reset asking
+    
 
 """
 Retaking and validating photos
@@ -1195,7 +1211,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange"
+groupId     = "group_orange_neww"
 groupName   = "employeurs"
 
 list_nom = []
