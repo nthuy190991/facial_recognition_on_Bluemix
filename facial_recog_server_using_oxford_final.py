@@ -582,9 +582,9 @@ def take_photos(clientId, step_time, flag_show_photos):
 #    thread_retake_validate_photos.start()
 	
 	# TODO: new
-	time.sleep(1)
-	
-	print "Adding faces to person group..."
+    time.sleep(1)
+
+    print "Adding faces to person group..."
     image_to_paths = [root_path+imgPath+str(name)+"."+str(j)+suffix for j in range(nb_img_max)]
     for image_path in image_to_paths:
         image_data = get_image_from_github(image_path)
