@@ -1211,7 +1211,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange_neww"
+groupId     = "group_orange_newww"
 groupName   = "employeurs"
 
 list_nom = []
