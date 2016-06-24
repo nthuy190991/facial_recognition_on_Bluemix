@@ -1151,8 +1151,14 @@ def flask_init():
         if (text=='START'):
             global_var_init(clientId)
 
-            thread_program = Thread(target = run_program, args= (clientId,), name = 'thread_prog_'+clientId)
-            thread_program.start()
+            # Train database
+            create_group_add_person(groupId, groupName)
+            result = train_person_group(groupId)
+
+            # Begin run program
+            if (result=='succeeded'):
+                thread_program = Thread(target = run_program, args= (clientId,), name = 'thread_prog_'+clientId)
+                thread_program.start()
         else:
             global global_vars
             global_var  = (item for item in global_vars if item["clientId"] == str(clientId)).next()
@@ -1211,23 +1217,18 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange_newww"
+groupId     = "group_orange_test"
 groupName   = "employeurs"
 
 list_nom = []
 list_personId = []
 nbr = 0
 
-create_group_add_person(groupId, groupName)
+global_vars = []
+origine_time = time.time()
 
-result = train_person_group(groupId)
-
-if (result=='succeeded'):
-    global_vars = []
-    origine_time = time.time()
-
-    flask_init()
-    port = int(os.getenv("PORT", 9099))
-    app.run(host = '0.0.0.0', port = port, threaded = True)
+flask_init()
+port = int(os.getenv("PORT", 9099))
+app.run(host = '0.0.0.0', port = port, threaded = True)
 
 # END OF PROGRAM
