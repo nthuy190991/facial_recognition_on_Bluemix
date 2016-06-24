@@ -552,7 +552,7 @@ def take_photos(clientId, step_time, flag_show_photos):
     global_var['text2'] = 'Veuillez patienter... '
 
     simple_message(clientId, global_var['text'] + ', ' + global_var['text2'])
-    time.sleep(0.5)
+    time.sleep(0.25)
     chrome_server2client(clientId, 'START')
 
     nb_img = 0
@@ -626,6 +626,8 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
             global_var['text3'] = ''
 
             simple_message(clientId, global_var['text'] + ' ' + global_var['text2'])
+            time.sleep(0.25)
+            chrome_server2client(clientId, 'START')
 
         for j in range(0, len(nb)):
             global_var['text3'] = str(j) + ' ont ete prises, reste a prendre : ' + str(len(nb)-j)
@@ -642,6 +644,9 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
             put_image_to_github(image_path, global_var['binary_data'])
 
             print "Enregistrer photo " + image_path + ", nb de photos prises : " + nb[j]
+
+        chrome_server2client(clientId, 'DONE')
+        time.sleep(0.25)
 
         a = yes_or_no(clientId, u'Reprise de photos finie, souhaitez-vous réviser vos photos ?', 4)
         if (a==1):
@@ -707,6 +712,10 @@ def re_identification(clientId, nb_time_max, name0):
     global global_vars
     global_var = (item for item in global_vars if item["clientId"] == str(clientId)).next()
 
+    global_var['text']  = ''
+    global_var['text2'] = ''
+    global_var['text3'] = ''
+
     tb_old_name    = np.chararray(shape=(nb_time_max+1), itemsize=10) # All of the old recognition results, which are wrong
     tb_old_name[:] = ''
     tb_old_name[0] = name0
@@ -743,7 +752,7 @@ def re_identification(clientId, nb_time_max, name0):
 
     if (result==1): # User confirms that the recognition is correct now
         global_var['flag_enable_recog'] = 0
-        global_var['flag_reidentify']   = 0
+        # global_var['flag_reidentify']   = 0
         global_var['flag_wrong_recog']  = 0
 
         get_face_emotion_api_results(clientId)
@@ -752,7 +761,7 @@ def re_identification(clientId, nb_time_max, name0):
 
     else: # Two time failed to recognized
         global_var['flag_enable_recog'] = 0 # Disable recognition when two tries have failed
-        global_var['flag_reidentify']   = 0
+        # global_var['flag_reidentify']   = 0
         simple_message(clientId, u'Désolé je vous reconnaît pas, veuillez me donner votre identifiant')
 
         name = ask_name(clientId, 1)
@@ -772,6 +781,8 @@ def re_identification(clientId, nb_time_max, name0):
 
             time.sleep(1)
             global_var['flag_take_photo']  = 1  # Enable photo taking
+
+    global_var['flag_reidentify']   = 0
 
 """
 ==============================================================================
@@ -846,7 +857,7 @@ def run_program(clientId):
                             if (not global_var['flag_reidentify']):
                                 global_var['flag_ask'] = 1
                                 simple_message(clientId, u'Désolé, je ne vous reconnaît pas')
-                                time.sleep(0.5)
+                                time.sleep(0.25)
                     else:
                         global_var['flag_recog'] = -1
                         global_var['text']  = 'Aucune personne'
@@ -1184,7 +1195,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange_neuf"
+groupId     = "group_orange"
 groupName   = "employeurs"
 
 list_nom = []

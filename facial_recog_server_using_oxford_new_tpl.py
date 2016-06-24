@@ -180,7 +180,8 @@ def create_group_add_person(groupId, groupName):
     # Create PersonGroup
     result = face_api.createPersonGroup(groupId, groupName, "")
     flag_reuse_person_group = False
-    if (result!=''):
+    # if (result!=''):
+    if ('error' in result):
         result = eval(result)
 
         if (result["error"]["code"] == "PersonGroupExists"):
@@ -189,7 +190,7 @@ def create_group_add_person(groupId, groupName):
             res_train_status      = res_train_status.replace('null','None')
             res_train_status_dict = eval(res_train_status)
 
-            if 'error' not in res_train_status_dict:
+            if ('error' not in res_train_status_dict):
                 createdDateTime = res_train_status_dict['createdDateTime']
                 year, month, day, hour, mi, sec = convert_datetime(createdDateTime)
 
@@ -412,6 +413,9 @@ def go_to_formation(clientId, xls_filename, name):
         simple_message(clientId, u"SILENT Cliquez " + link + u" pour accéder à la page Formation pour plus d'information")
         time.sleep(0.5)
 
+        time.sleep(5)
+        return_to_recog(clientId) # Return to recognition program immediately or 20 seconds before returning
+    else:
         return_to_recog(clientId) # Return to recognition program immediately or 20 seconds before returning
 
 """
@@ -421,7 +425,7 @@ def return_to_recog(clientId):
 
     global global_vars
     global_var = (item for item in global_vars if item["clientId"] == str(clientId)).next()
-    time.sleep(5)
+    
     if not global_var['flag_quit']:
         resp_quit_formation = quit_formation(clientId)
         if (resp_quit_formation == 0):
@@ -497,6 +501,8 @@ def take_photos(clientId, step_time, flag_show_photos):
     global_var['text2'] = 'Veuillez patienter... '
 
     simple_message(clientId, global_var['text'] + ', ' + global_var['text2'])
+    time.sleep(0.25)
+    chrome_server2client(clientId, 'START')
 
     nb_img = 0
     while (nb_img < nb_img_max):
@@ -509,6 +515,8 @@ def take_photos(clientId, step_time, flag_show_photos):
         global_var['text3'] = str(nb_img+1) + ' ont ete prises, reste a prendre : ' + str(nb_img_max-nb_img-1)
         nb_img += 1
         time.sleep(step_time)
+
+    chrome_server2client(clientId, 'DONE')
 
     # Display photos that has just been taken
     if flag_show_photos:
@@ -566,6 +574,8 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
             global_var['text3'] = ''
 
             simple_message(clientId, global_var['text'] + ' ' + global_var['text2'])
+            time.sleep(0.25)
+            chrome_server2client(clientId, 'START')
 
         for j in range(0, len(nb)):
             global_var['text3'] = str(j) + ' ont ete prises, reste a prendre : ' + str(len(nb)-j)
@@ -579,6 +589,8 @@ def retake_validate_photos(clientId, personId, step_time, flag_show_photos, imgP
                 f.close()
 
             print "Enregistrer photo " + image_path + ", nb de photos prises : " + nb[j]
+        chrome_server2client(clientId, 'DONE')
+        time.sleep(0.25)
 
         a = yes_or_no(clientId, u'Reprise de photos finie, souhaitez-vous réviser vos photos ?', 4)
         if (a==1):
@@ -636,6 +648,10 @@ def re_identification(clientId, nb_time_max, name0):
     global global_vars
     global_var = (item for item in global_vars if item["clientId"] == str(clientId)).next()
 
+    global_var['text']  = ''
+    global_var['text2'] = ''
+    global_var['text3'] = ''
+
     tb_old_name    = np.chararray(shape=(nb_time_max+1), itemsize=10) # All of the old recognition results, which are wrong
     tb_old_name[:] = ''
     tb_old_name[0] = name0
@@ -672,7 +688,7 @@ def re_identification(clientId, nb_time_max, name0):
 
     if (result==1): # User confirms that the recognition is correct now
         global_var['flag_enable_recog'] = 0
-        global_var['flag_reidentify']   = 0
+        # global_var['flag_reidentify']   = 0
         global_var['flag_wrong_recog']  = 0
 
         get_face_emotion_api_results(clientId)
@@ -681,7 +697,7 @@ def re_identification(clientId, nb_time_max, name0):
 
     else: # Two time failed to recognized
         global_var['flag_enable_recog'] = 0 # Disable recognition when two tries have failed
-        global_var['flag_reidentify']   = 0
+        # global_var['flag_reidentify']   = 0
         simple_message(clientId, u'Désolé je vous reconnaît pas, veuillez me donner votre identifiant')
 
         name = ask_name(clientId, 1)
@@ -701,6 +717,8 @@ def re_identification(clientId, nb_time_max, name0):
 
             time.sleep(1)
             global_var['flag_take_photo']  = 1  # Enable photo taking
+
+    global_var['flag_reidentify']   = 0
 
 """
 ==============================================================================
@@ -775,6 +793,7 @@ def run_program(clientId):
                             if (not global_var['flag_reidentify']):
                                 global_var['flag_ask'] = 1
                                 simple_message(clientId, u'Désolé, je ne vous reconnaît pas')
+                                time.sleep(0.25)
                     else:
                         global_var['flag_recog'] = -1
                         global_var['text']  = 'Aucune personne'
@@ -1102,7 +1121,7 @@ root_path    = ""
 imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
 wait_time    = 2      # Time needed to wait for recognition
-nb_img_max   = 2      # Number of photos needs to be taken for each user
+nb_img_max   = 3      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
 maxNbOfCandidates = 1 # Maximum number of candidates for the identification
 
@@ -1130,62 +1149,6 @@ if (result=='succeeded'):
     flask_init()
     port = int(os.getenv("PORT", 9099))
     app.run(host = '0.0.0.0', port = port, threaded = True)
-
-
-## Delete PersonGroup that existed
-#face_api.deletePersonGroup(groupId)
-#
-#
-## Create PersonGroup
-#result = face_api.createPersonGroup(groupId, groupName, "")
-#print result
-#
-#list_nom = []
-#list_personId = []
-#nbr = 0
-#
-#image_paths = [os.path.join(imgPath, f) for f in os.listdir(imgPath)]
-#
-#for image_path in image_paths:
-#    nom = os.path.split(image_path)[1].split(".")[0]
-#    if nom not in list_nom:
-#        # Create a Person in a PersonGroup
-#        personName = nom
-#        personId   = face_api.createPerson(groupId, personName, "")
-#
-#        list_nom.append(nom)
-#        list_personId.append(personId)
-#        nbr += 1
-#    else:
-#        personId = list_personId[nbr-1]
-#
-#    print "Add image...", nom, '\t', image_path
-#    face_api.addPersonFace(groupId, personId, "", image_path, None)
-#    time.sleep(0.25)
-#
-#resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
-#
-#res      = face_api.getPersonGroupTrainingStatus(groupId)
-#res      = res.replace('null','None')
-#res_dict = eval(res)
-#training_status = res_dict['status']
-#print training_status
-#
-#while (training_status=='running'):
-#    time.sleep(0.25)
-#    res = face_api.getPersonGroupTrainingStatus(groupId)
-#    res = res.replace('null','None')
-#    res_dict = eval(res)
-#    training_status = res_dict['status']
-#    print training_status
-#
-#if (training_status=='succeeded'):
-#    global_vars = []
-#    origine_time = time.time()
-#
-#    flask_init()
-#    port = int(os.getenv("PORT", 9099))
-#    app.run(host = '0.0.0.0', port = port, threaded = True)
 
 
 # END OF PROGRAM

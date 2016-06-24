@@ -15,6 +15,8 @@ import numpy as np
 from binascii import *
 from processRequest import processRequest
 import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+import time
 
 username = 'nthuy190991'
 password = 'Thanhhuy123'
@@ -147,11 +149,12 @@ requests.get('https://api.github.com/users/nthuy190991', auth=('nthuy190991', 'T
 
 
 
-# response = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_bin/huyy.0.bin', auth=(username, password))
+response = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford/huy.0.jpg', auth=(username, password))
 
-# result = response.json() if response.content else None
-# data_read = result['content']
-# binary_data = a2b_base64(data_read)
+result = response.json() if response.content else None
+
+data_read = result['content']
+binary_data = a2b_base64(data_read)
 
 # # Method 1
 # data8uint = np.fromstring(binary_data, np.uint8) # Convert bytestream to an unsigned int array
@@ -184,17 +187,34 @@ requests.get('https://api.github.com/users/nthuy190991', auth=('nthuy190991', 'T
 
 
 
-response = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_bin/huyy.0.bin', auth=(username, password))
-result = response.json() if response.content else None
-sha = result['sha']
+# response = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_bin/huyy.0.bin', auth=(username, password))
+# result = response.json() if response.content else None
+# sha = result['sha']
 
-headers = {
-    'Content-Type': 'application/json'
-}
-params = {"message": "delete bin",
-        "sha": sha}
-raa = requests.delete("https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_bin/huyy.0.bin", headers=headers,json=params, auth=(username, password))
-print raa, raa.content
+# headers = {
+#     'Content-Type': 'application/json'
+# }
+# params = {"message": "delete bin",
+#         "sha": sha}
+# raa = requests.delete("https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_bin/huyy.0.bin", headers=headers,json=params, auth=(username, password))
+# print raa, raa.content
 
 
 
+
+
+data_read = b2a_base64(binary_data)
+fh = open("imageToSave.jpg", "wb")
+fh.write(data_read.decode('base64'))
+fh.close()
+
+plt.figure()
+img = mpimg.imread("imageToSave.jpg")
+plt.imshow(img)
+plt.show()
+
+print binary_data
+print img
+
+time.sleep(2.5)
+plt.close("all")
