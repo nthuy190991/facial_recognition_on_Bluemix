@@ -115,7 +115,7 @@ def retrieve_face_emotion_att(clientId):
     data = global_var['binary_data']
 
     chrome_server2client(clientId, 'Veuillez patienter pendant quelques secondes...')
-    time.sleep(1)
+    time.sleep(0.5)
     chrome_server2client(clientId, 'START')
 
     # Face API
@@ -163,6 +163,7 @@ def retrieve_face_emotion_att(clientId):
         global_var['emo']     = tb_emo[ind_max]
 
         chrome_server2client(clientId, 'DONE')
+        time.sleep(0.5)
 
         return tb_age, tb_gender, tb_glasses, tb_emo
     else:
@@ -824,7 +825,7 @@ def run_program(clientId):
         """
         i = 0
         j = 0
-        while (time.time() - time_origine < 300):
+        while True:
             data = global_var['binary_data']
 
             """
@@ -989,7 +990,7 @@ def quit_program(clientId):
     global_var['flag_quit'] = 0 # Turn it on to execute just the yes_no question and bye-bye
 #    quit_opt = yes_or_no(clientId, 'Exit', 'Voulez-vous vraiment quitter ?', 3) # This wont executed if quit by Esc key
 
-    chrome_server2client(clientId, u"{} secondes ont été passées".format(str(time.time() - origine_time).split('.')[0]))
+    #chrome_server2client(clientId, u"{} secondes ont été passées".format(str(time.time() - origine_time).split('.')[0]))
     chrome_server2client(clientId, u"Merci de votre utilisation. Au revoir, à bientôt")
     global_var['flag_quit'] = 1
 
