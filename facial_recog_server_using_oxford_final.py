@@ -808,13 +808,13 @@ def run_program(clientId):
         """
         i = 0
         j = 0
-        while (time.time() - time_origine < 120):
+        while (time.time() - time_origine < 300):
             data = global_var['binary_data']
 
             """
             Decision part
             """
-            if not (global_var['flag_quit']): #TODO: new
+            if not (global_var['flag_quit']):
                 elapsed_time = time.time() - start_time
                 if ((elapsed_time > wait_time) and global_var['flag_enable_recog']): # Identify after each 3 seconds
                     faceDetectResult    = face_api.faceDetect(None, None, data)
