@@ -747,7 +747,7 @@ def show_photos(clientId, imgPath, name):
     for img_path in image_to_paths:
         alt  = str(name) + ' - Photos'
         link = "https://github.com/nthuy190991/facial_recognition_on_Bluemix/blob/master/" + img_path + "?raw=true"
-        html = html + '&emsp;<img src="'+ link + '" alt="'+ alt +'" style="width:128px;">'
+        html = html + '&emsp;<img src="'+ link + '" class="w3-border w3-padding-4 w3-padding-tiny" alt="'+ alt +'" style="width:128px;">'
 
     simple_message(clientId, u"SILENT " + html)
     time.sleep(0.25)
