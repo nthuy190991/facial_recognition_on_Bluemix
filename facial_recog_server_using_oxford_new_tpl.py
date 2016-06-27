@@ -700,7 +700,7 @@ def re_identification(clientId, nb_time_max, name0):
         # global_var['flag_reidentify']   = 0
         simple_message(clientId, u'Désolé je vous reconnaît pas, veuillez me donner votre identifiant')
 
-        name = ask_name(clientId, 1)
+        name = ask_name(clientId, 0)
         if os.path.exists(imgPath+str(name)+".0"+suffix): # Assume that user's face-database exists if the photo 0.png exists
             simple_message(clientId, 'Bonjour '+ str(name)+', je vous conseille de changer vos photos')
             flag_show_photos = 1
