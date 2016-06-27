@@ -23,8 +23,8 @@ import matplotlib.image as mpimg
 from datetime import datetime
 import requests
 
-_username   = 'nthuy190991'
-_password   = 'Thanhhuy123'
+_username   = 'thanhhuynguyenorange'
+_password   = 'thanhhuy.nguyen@orange.com'
 _url_github = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/'
 
 def put_image_to_github(image_path, data):
@@ -34,6 +34,10 @@ def put_image_to_github(image_path, data):
     }
     json = {
         "message": "bluemix",
+        "committer": {
+            "name": "thanhhuynguyenorange",
+            "email": "thanhhuy.nguyen@orange.com"
+        },
         "content": b2a_base64(data)
     }
     url = _url_github + image_path
@@ -62,6 +66,10 @@ def delete_image_on_github(image_path):
     }
     json = {
         "message": "bluemix",
+        "committer": {
+            "name": "thanhhuynguyenorange",
+            "email": "thanhhuy.nguyen@orange.com"
+        },
         "sha": sha
     }
     response = requests.delete(url, headers=headers, json=json, auth=(_username, _password))
