@@ -24,7 +24,7 @@ from datetime import datetime
 import requests
 
 _username   = 'thanhhuynguyenorange'
-_password   = 'thanhhuy.nguyen@orange.com'
+_password   = 'GGQN0871abc'
 _url_github = 'https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/'
 
 def put_image_to_github(image_path, data):
@@ -50,8 +50,13 @@ def get_image_from_github(image_path):
     url = _url_github + image_path
     response = requests.get(url, auth=(_username, _password))
 
-    result = response.json() if response.content else None
-    data_read   = result['content']
+    # result = response.json() if response.content else None
+    if (response.content):
+        result = response.json() 
+        data_read = result['content']
+    else:
+        data_read =  None
+
     binary_data = a2b_base64(data_read)
     return binary_data
 
@@ -738,13 +743,14 @@ def show_photos(clientId, imgPath, name):
     # for ind in range(nb_img_max):
     #     plt.close("all")
 
-    i = 1
+    html = ''
     for img_path in image_to_paths:
-        alt  = str(name) + ' - Photo '+ str(i)
-        html = '<img src="'+ img_path + '" alt="'+ alt +'" style="width:128px;height:128px;">'
-        simple_message(clientId, u"SILENT " + html)
-        i += 1
-        time.sleep(0.25)
+        alt  = str(name) + ' - Photos'
+        link = "https://github.com/nthuy190991/facial_recognition_on_Bluemix/blob/master/" + img_path + "?raw=true"
+        html = html + '&emsp;<img src="'+ link + '" alt="'+ alt +'" style="width:128px;">'
+
+    simple_message(clientId, u"SILENT " + html)
+    time.sleep(0.25)
 
 
 """
@@ -1248,7 +1254,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange_test2"
+groupId     = "group_orange_test3"
 groupName   = "employeurs"
 
 list_nom = []
