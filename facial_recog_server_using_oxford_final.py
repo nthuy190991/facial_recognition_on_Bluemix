@@ -579,32 +579,32 @@ def take_photos(clientId, step_time, flag_show_photos):
 
     chrome_server2client(clientId, 'DONE')
 
-#    # Display photos that has just been taken
-#    if flag_show_photos:
-#        thread_show_photos = Thread(target = show_photos, args = (clientId, imgPath, name), name = 'thread_show_photos_'+clientId)
-#        thread_show_photos.start()
-#
-#    time.sleep(0.5)
-#
-#    # Allow to retake photos and validate after finish taking
-#    thread_retake_validate_photos = Thread(target = retake_validate_photos, args = (clientId, personId, step_time, flag_show_photos, imgPath, name), name = 'thread_retake_validate_photos_'+clientId)
-#    thread_retake_validate_photos.start()
+    # Display photos that has just been taken
+    if flag_show_photos:
+        thread_show_photos = Thread(target = show_photos, args = (clientId, imgPath, name), name = 'thread_show_photos_'+clientId)
+        thread_show_photos.start()
+
+    time.sleep(0.5)
+
+    # Allow to retake photos and validate after finish taking
+    thread_retake_validate_photos = Thread(target = retake_validate_photos, args = (clientId, personId, step_time, flag_show_photos, imgPath, name), name = 'thread_retake_validate_photos_'+clientId)
+    thread_retake_validate_photos.start()
 	
 	# TODO: new
-    time.sleep(1)
+    # time.sleep(1)
 
-    print "Adding faces to person group..."
-    image_to_paths = [root_path+imgPath+str(name)+"."+str(j)+suffix for j in range(nb_img_max)]
-    for image_path in image_to_paths:
-        image_data = get_image_from_github(image_path)
-        face_api.addPersonFace(groupId, personId, None, None, image_data)
+    # print "Adding faces to person group..."
+    # image_to_paths = [root_path+imgPath+str(name)+"."+str(j)+suffix for j in range(nb_img_max)]
+    # for image_path in image_to_paths:
+    #     image_data = get_image_from_github(image_path)
+    #     face_api.addPersonFace(groupId, personId, None, None, image_data)
 
-    # Retrain Person Group
-    resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
-    print "Re-train Person Group: ", resultTrainPersonGroup
+    # # Retrain Person Group
+    # resultTrainPersonGroup = face_api.trainPersonGroup(groupId)
+    # print "Re-train Person Group: ", resultTrainPersonGroup
 
-    global_var['flag_enable_recog'] = 1  # Re-enable recognition
-    global_var['flag_ask'] = 1 # Reset asking
+    # global_var['flag_enable_recog'] = 1  # Re-enable recognition
+    # global_var['flag_ask'] = 1 # Reset asking
     
 
 """
@@ -719,24 +719,32 @@ Display photos that have just been taken, close them if after 5 seconds or press
 def show_photos(clientId, imgPath, name):
     image_to_paths = [root_path + imgPath + str(name) + "." + str(j) + suffix for j in range(nb_img_max)]
 
+    # for img_path in image_to_paths:
+    #     image_data = get_image_from_github(img_path)
+    #     data_read  = b2a_base64(image_data)
+
+    #     fh = open(img_path, "wb")
+    #     fh.write(data_read.decode('base64'))
+    #     fh.close()
+
+    # for img_path in image_to_paths:
+    #     print 'display', img_path
+    #     plt.figure()
+    #     img = mpimg.imread(img_path)
+    #     plt.imshow(img)
+    # plt.show()
+
+    # time.sleep(2.5) # wait 5 secs
+    # for ind in range(nb_img_max):
+    #     plt.close("all")
+
+    i = 1
     for img_path in image_to_paths:
-        image_data = get_image_from_github(img_path)
-        data_read  = b2a_base64(image_data)
-
-        fh = open(img_path, "wb")
-        fh.write(data_read.decode('base64'))
-        fh.close()
-
-    for img_path in image_to_paths:
-        print 'display', img_path
-        plt.figure()
-        img = mpimg.imread(img_path)
-        plt.imshow(img)
-    plt.show()
-
-    time.sleep(2.5) # wait 5 secs
-    for ind in range(nb_img_max):
-        plt.close("all")
+        alt  = str(name) + ' - Photo '+ str(i)
+        html = '<img src="'+ img_path + '" alt="'+ alt +'" style="width:128px;height:128px;">'
+        simple_message(clientId, u"SILENT " + html)
+        i += 1
+        time.sleep(0.25)
 
 
 """
@@ -1230,7 +1238,7 @@ root_path    = ""
 imgPath      = "face_database_for_oxford/" # path to database of faces
 suffix       = '.jpg' # image file extention
 wait_time    = 2      # Time needed to wait for recognition
-nb_img_max   = 3      # Number of photos needs to be taken for each user
+nb_img_max   = 2      # Number of photos needs to be taken for each user
 xls_filename = 'formation.xls' # Excel file contains Formation information
 maxNbOfCandidates = 1 # Maximum number of candidates for the identification
 
@@ -1240,7 +1248,7 @@ natural_language_classifier = NaturalLanguageClassifierV1(
                               password = 'SEuX8ielPiiJ')
 
 # Training Phase
-groupId     = "group_orange_test"
+groupId     = "group_orange_test2"
 groupName   = "employeurs"
 
 list_nom = []
