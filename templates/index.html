@@ -2,62 +2,63 @@
 <html lang="en">
 	<head>
 		<title>My Virtual Assistant</title>
-		<meta charset="utf-8">
-			<meta http-equiv="X-UA-Compatible" content="IE=edge">
-				<meta name="viewport" content="width=device-width, initial-scale=1">
-					<link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
-						<link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+		<meta charset="utf8">
+			<meta httpequiv="XUACompatible" content="IE=edge">
+				<meta name="viewport" content="width=devicewidth, initialscale=1">
+					<link rel="shortcut icon" href="/images/favicon.ico" type="image/xicon">
+						<link rel="icon" href="/images/favicon.ico" type="image/xicon">
 							<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-								<link rel="stylesheet" href="/css/bootstrap-dark.css">
+								<link rel="stylesheet" href="/css/bootstrapdark.css">
 									<link rel="stylesheet" href="/css/banner.css">
 										<link rel="stylesheet" href="/css/style.css">
 											<link rel="stylesheet" href="/css/video.css">
 											</head>
 											<body>
-												<div class="row service-container">
+												<div class="row servicecontainer">
 													<div class="row header">
 														<div class="container">
-															<div class="col-md-1 col-sm-1 hidden-xs">
-																<img src="/images/app.png" class="service-icon">
+															<div class="colmd1 colsm1 hiddenxs">
+																<img src="/images/app.png" class="serviceicon">
 																</div>
-																<div class="col-lg-10 col-md-10 col-sm-10 dialog-description">
-																	<h1 class="service-title">Assistant virtuel</h1><p class="service-description">Démonstration de la Reconnaissance Faciale utilisant Microsoft Oxford Face and Emotion API</p>
+																<div class="collg10 colmd10 colsm10 dialogdescription">
+																	<h1 class="servicetitle">Assistant virtuel</h1>
+																	<p class="servicedescription">Démonstration de la Reconnaissance Faciale utilisant Microsoft Oxford Vision API et services cognitifs IBM Watson</p>
 																</div>
 															</div>
 														</div>
 													</div>
-													<div class="row conversation-div">
+													<div class="row conversationdiv">
 														<div class="container">
-															<div class="col-lg-12 col-md-12 col-xs-12">
-																<div class="conversation-flow-container clearfix">
-																	<div class="video">
-																		<video id="videoElement" autoplay style="width:40%"/>
-																		<canvas id="canvasElement" style="display:none;"/>
+															<div class="collg8 colmd8 colxs4" id="conversationflowcontainer">
+																<div class="conversationflowcontainer clearfix">
+																	<div class="collg12 colmd12 colxs12">
+																		<div class="conversationwell conversationcontainer clearfix"/>
 																	</div>
-																	<div class="col-lg-12 col-md-12 col-xs-12">
-																		<div class="conversation-well conversation-container clearfix"/>
-																	</div>
-																	<div class="dialogs-loading text-center">
-																		<img src="images/loading-indicator.svg" class="watson-loading-gif">
+																	<div class="dialogsloading textcenter">
+																		<img src="images/loadingindicator.svg" class="watsonloadinggif">
 																		</div>
-																		<div class="text-center dialogs-error">
+																		<div class="textcenter dialogserror">
 																			<div class="errorMsg"/>
 																		</div>
-																		<div class="col-lg-8 col-md-8 col-xs-6 no-padding-right">
-																			<input id="response-input" type="text" placeholder="Tapez votre réponse" class="user-input form-control">
+																		<div class="collg8 colmd8 colxs6 nopaddingright">
+																			<input id="responseinput" type="text" placeholder="Tapez votre réponse" class="userinput formcontrol">
 																			</div>
-																			<div class="col-lg-2 col-md-2 col-xs-3 text-right no-padding-left no-padding-right">
-																				<button id="send-btn" class="input-btn btn btn-block">Envoyer</button>
+																			<div class="collg2 colmd2 colxs3 textright nopaddingleft nopaddingright">
+																				<button id="sendbtn" class="inputbtn btn btnblock">Envoyer</button>
 																			</div>
-																			<div class="col-lg-2 col-md-2 col-xs-3 text-right no-padding-left">
-																				<button id="listen-btn" class="listen-btn btn btn-block">Ecouter</button>
+																			<div class="collg2 colmd2 colxs3 textright nopaddingleft">
+																				<button id="listenbtn" class="listenbtn btn btnblock">Ecouter</button>
 																			</div>
 																		</div>
+																	</div>
+																	<div class="video collg4 colmd4 colmd12">
+																		<video id="videoElement" autoplay style="width:100%;margintop: 20px;"/>
+																		<canvas id="canvasElement" style="display:none;"/>
 																	</div>
 																</div>
 															</div>
 															<audio class="audio"/>
-															<script type="text/javascript" src="/javascript/jquery-1.11.1.min.js"/>
+															<script type="text/javascript" src="/javascript/jquery1.11.1.min.js"/>
 															<script type="text/javascript" src="/javascript/remote.js"/>
 														</body>
 													</html>
