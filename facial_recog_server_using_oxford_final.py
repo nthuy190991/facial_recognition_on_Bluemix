@@ -89,9 +89,9 @@ def replace_accents(text):
                      'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ò', 'ó', 'ô', 'õ', 'ö',
                      'ù', 'ú', 'û', 'ü']
     chars_replace = ['\xC3','\xE0', '\xE1', '\xE2', '\xE3', '\xE4', '\xE5',
-                      '\xE6', '\xE7', '\xE8', '\xE9', '\xEA', '\xEB', '\xEC',
-                      '\xED', '\xEE', '\xEF', '\xF2', '\xF3', '\xF4', '\xF5',
-                      '\xF6', '\xF9', '\xFA', '\xFB', '\xFC']
+                     '\xE6', '\xE7', '\xE8', '\xE9', '\xEA', '\xEB', '\xEC',
+                     '\xED', '\xEE', '\xEF', '\xF2', '\xF3', '\xF4', '\xF5',
+                     '\xF6', '\xF9', '\xFA', '\xFB', '\xFC']
     text2 = str_replace_chars(text, chars_origine, chars_replace)
     return text2
 
@@ -1135,7 +1135,7 @@ def global_var_init(clientId):
 
     nom = ''
 
-    global_vars.append( dict([  ('clientId', str(clientId)),
+    global_vars.append(dict([   ('clientId', str(clientId)),
                                 ('text', text), ('text2', text2), ('text3', text3),
                                 ('age', age), ('gender', gender), ('emo', emo),
                                 ('flag_recog', flag_recog),
@@ -1154,7 +1154,7 @@ def global_var_init(clientId):
                                 ('startListening', startListening),
                                 ('binary_data', binary_data),
                                 ('nom', nom)
-                                ]))
+                            ]))
 
 """
 ==============================================================================

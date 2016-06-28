@@ -60,25 +60,25 @@ def encodeUserData(user, password):
     return "Basic " + (user + ":" + password).encode("base64").rstrip()
     
 # Authentification
-requests.get('https://api.github.com/users/nthuy190991', auth=('nthuy190991', 'Thanhhuy123'))       
+# requests.get('https://api.github.com/users/nthuy190991', auth=('nthuy190991', 'Thanhhuy123'))       
 
 
 
-# params = {'ref':'master'}
-# r = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/readme', params=params)
-# # print r.content
+params = {'ref':'master'}
+# r = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/readme', params=params,  auth=('nthuy190991', 'Thanhhuy123'))
+# print r.content
 
-# res_list_img = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford', params=params)
+res_list_img = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford', params=params,  auth=('nthuy190991', 'Thanhhuy123'))
 
-# res_list_img = requests.request('GET','https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford')
+# res_list_img = requests.request('GET','https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford', auth=('nthuy190991', 'Thanhhuy123'))
 
-# res_list_img = eval(res_list_img.content)
-# # print res_list_img
+res_list_img = eval(res_list_img.content)
+# print res_list_img
 
-# list_images = []
-# for img in res_list_img:
-#     list_images.append(img['name'])
-# print list_images  
+list_images = []
+for img in res_list_img:
+    list_images.append(img['name'])
+print list_images  
 
 # for image in list_images:
 #     res_img = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford/'+image)
@@ -190,21 +190,21 @@ requests.get('https://api.github.com/users/nthuy190991', auth=('nthuy190991', 'T
 
 
 
-response = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford/emm.2.jpg', auth=(username, password))
-result = response.json() if response.content else None
-sha = result['sha']
+# response = requests.get('https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford/emm.2.jpg', auth=(username, password))
+# result = response.json() if response.content else None
+# sha = result['sha']
 
-headers = {
-    'Content-Type': 'application/json'
-}
-params = {"message": "delete emm.2.jpg",
-            "committer": {
-            "name": "thanhhuynguyenorange",
-            "email": "thanhhuy.nguyen@orange.com"
-          },
-        "sha": sha}
-raa = requests.delete("https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford/emm.2.jpg", headers=headers,json=params, auth=(username, password))
-print raa, raa.content
+# headers = {
+#     'Content-Type': 'application/json'
+# }
+# params = {"message": "delete emm.2.jpg",
+#             "committer": {
+#             "name": "thanhhuynguyenorange",
+#             "email": "thanhhuy.nguyen@orange.com"
+#           },
+#         "sha": sha}
+# raa = requests.delete("https://api.github.com/repos/nthuy190991/facial_recognition_on_Bluemix/contents/face_database_for_oxford/emm.2.jpg", headers=headers,json=params, auth=(username, password))
+# print raa, raa.content
 
 
 
