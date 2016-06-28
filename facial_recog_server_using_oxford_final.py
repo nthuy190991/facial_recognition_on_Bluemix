@@ -18,8 +18,6 @@ from binascii import a2b_base64, b2a_base64
 from watson_developer_cloud import NaturalLanguageClassifierV1
 import face_api
 import emotion_api
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 from datetime import datetime
 import requests
 

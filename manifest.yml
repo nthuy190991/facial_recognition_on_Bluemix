@@ -1,7 +1,7 @@
 ---
 applications:
 - name: facial-recog-using-Oxford
-  host: facial-recog-using-Oxford-vBeta
+  host: facial-recog-using-Oxford
   memory: 256MB
   disk_quota: 512MB
   domain: mybluemix.net
