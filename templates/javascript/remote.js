@@ -190,13 +190,12 @@ function listenAndWrite(){
 		//recognition.continuous = true;
 		//recognition.interimResults = true;
 		recognition.onresult = function(event) {
-			var text = event.results[0][0].transcript
-			//$.post('/StT/'+clientid+' '+text); //TODO: new
+			var text = event.results[0][0].transcript;
 			//console.log(event);
 			$dialogsLoading.hide();
 			$userInput.val(event.results[0][0].transcript);
 			conductConversation();
-		}
+		};
 		$dialogsLoading.show();
 		recognition.start();
 	}
