@@ -2,8 +2,8 @@
 applications:
 - name: facial-recog-using-Oxford
   host: facial-recog-using-Oxford
-  memory: 256MB
-  disk_quota: 512MB
+  memory: 512MB
+  disk_quota: 1024MB
   domain: mybluemix.net
   buildpack: python_buildpack
   command: python facial_recog_server_using_oxford_final.py
