@@ -507,12 +507,12 @@ def reform_username(name):
         lastname     = 'nguyen'
         email_suffix = '@orange.com'
 
-    elif (name=='cleblain'):
+    elif (name=='cleblain' or name=='JLTS5253'):
         firstname    = 'christian'
         lastname     = 'leblainvaux'
         email_suffix = '@orange.com'
 
-    elif (name=='catherie'):
+    elif (name=='catherine' or name=='lemarquis' or name=='ECPI6335'):
         firstname    = 'catherine'
         lastname     = 'lemarquis'
         email_suffix = '@orange.com'
