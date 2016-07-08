@@ -29,10 +29,10 @@ def replace_accents(text):
     chars_origine = ['Ê','à', 'á', 'â', 'ã', 'ä', 'å', 'æ', 'ç', 'è', 'é',
                      'ê', 'ë', 'ì', 'í', 'î', 'ï', 'ò', 'ó', 'ô', 'õ', 'ö',
                      'ù', 'ú', 'û', 'ü']
-    chars_replace  = ['\xC3','\xE0', '\xE1', '\xE2', '\xE3', '\xE4', '\xE5',
-                      '\xE6', '\xE7', '\xE8', '\xE9', '\xEA', '\xEB', '\xEC',
-                      '\xED', '\xEE', '\xEF', '\xF2', '\xF3', '\xF4', '\xF5',
-                      '\xF6', '\xF9', '\xFA', '\xFB', '\xFC']
+    chars_replace = ['\xC3','\xE0', '\xE1', '\xE2', '\xE3', '\xE4', '\xE5',
+                     '\xE6', '\xE7', '\xE8', '\xE9', '\xEA', '\xEB', '\xEC',
+                     '\xED', '\xEE', '\xEF', '\xF2', '\xF3', '\xF4', '\xF5',
+                     '\xF6', '\xF9', '\xFA', '\xFB', '\xFC']
     text2 = str_replace_chars(text, chars_origine, chars_replace)
     return text2
 
@@ -197,7 +197,6 @@ def create_group_add_person(groupId, groupName):
                 structTime = time.localtime()
                 dt_now = datetime(*structTime[:6])
 
-
                 # Compare if the PersonGroup has expired or not (24 hours)
                 if (dt_now.year==year):
                     if (dt_now.month==month):
@@ -212,6 +211,8 @@ def create_group_add_person(groupId, groupName):
                             del_person_group = True
                     else:
                         del_person_group = True
+                else:
+                    del_person_group = True
             else:
                 del_person_group = True
 
@@ -351,7 +352,7 @@ def chrome_yes_or_no(clientId, question):
     if (response=='oui' or response=='non'):
         responseYesOrNo = response
     else:
-        classes = natural_language_classifier.classify('2374f9x68-nlc-1265', response)
+        classes = natural_language_classifier.classify('8a0bcex70-nlc-1679', response)
         responseYesOrNo = classes["top_class"]
 
     if not(global_var['flag_quit']):
@@ -425,7 +426,7 @@ def return_to_recog(clientId):
 
     global global_vars
     global_var = (item for item in global_vars if item["clientId"] == str(clientId)).next()
-    
+
     if not global_var['flag_quit']:
         resp_quit_formation = quit_formation(clientId)
         if (resp_quit_formation == 0):
@@ -1127,8 +1128,8 @@ maxNbOfCandidates = 1 # Maximum number of candidates for the identification
 
 # Natural Language Classifier
 natural_language_classifier = NaturalLanguageClassifierV1(
-                              username = '82376208-a089-464c-a5da-96893ed1aa89',
-                              password = 'SEuX8ielPiiJ')
+                              username = "ee594378-5a1b-4de5-8fa8-5e975aaacd89",
+                              password = "Q01PMXvwnmhz")
 
 # Training Phase
 groupId     = "group_orange"
